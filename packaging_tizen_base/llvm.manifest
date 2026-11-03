@@ -1,0 +1,8 @@
+<manifest>
+  <assign>
+     <filesystem path="/home/owner/share/tmp/sdk_tools/lldb/bin/lldb-mi" exec_label="User" />
+  </assign>
+  <request>
+     <domain name="_"/>
+  </request>
+</manifest>

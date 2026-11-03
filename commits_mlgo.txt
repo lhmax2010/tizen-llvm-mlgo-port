@@ -1,0 +1,5 @@
+0001 3d723549f6037bdab5be47aaa6e6354fd3707d89 Add packaging [明确] — 新增 packaging/llvm.spec 的 MLGO 开关、AOT sysroot/模型 override/嵌入 runtime 配置，并新增 ARM/AArch64/x86_64 的 inliner 与 regalloc eviction 模型包。
+0007 fd7a4929c0e424d564cdd1f0c55af9153dcea321 Merge MLGO AOT compilation support and optimization improvements [明确] — 修改 TensorFlowCompile.cmake 和 llvm/CMakeLists.txt，新增 runtime 导出开关及一次性嵌入 XLA runtime 对象的配置。
+0011 7e4dc62d8ac01f90488a0cc8e0f34f8373228c84 optimize llvm performance [待确认] — 仅 spec 的 MLGO 邻近上下文命中；改动 x86_64 的 Clang bootstrap、ThinLTO 和静态链接，可能影响内嵌 XLA 对象链接，但未改 MLGO 接口或模型。
+0013 67619ec8bbbac7238a6cfc33a481ccfbcd12206f packaging: fix llvm-static-devel with ThinLTO [待确认] — 仅 spec 的 MLGO Source/宏上下文命中；新增静态归档 bitcode 转 native 的安装处理，可能影响含 MLGO runtime 的组件归档，未改 MLGO 接口。
+0014 f999bd406c0a70fe8107aa992164fe6945c5d46a Revert clang bootstrap + ThinLTO, fall back to GCC [待确认] — 仅 spec 的 MLGO 邻近上下文命中；撤销 Clang/ThinLTO/静态归档转换并恢复 GCC，保留 MLGO 配置，归为间接构建相关而非 MLGO 功能改动。

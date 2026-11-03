@@ -1,0 +1,105 @@
+From 7e4dc62d8ac01f90488a0cc8e0f34f8373228c84 Mon Sep 17 00:00:00 2001
+From: "fangyu.he" <fangyu.he@samsung.com>
+Date: Thu, 24 Sep 2026 12:55:12 +0800
+Subject: [PATCH 11/14] optimize llvm performance 1. Use -O3 2. Using thin-lto
+ 3. Static link libllvm
+
+Change-Id: Idcd75c5d5a57368aeae1081f0664be042c2ee707
+---
+ packaging/llvm.spec | 46 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 44 insertions(+), 2 deletions(-)
+
+diff --git a/packaging/llvm.spec b/packaging/llvm.spec
+index c901dc5a2d5d..9603051ec3f7 100644
+--- a/packaging/llvm.spec
++++ b/packaging/llvm.spec
+@@ -59,6 +59,13 @@ BuildRequires: sed
+ %endif
+ BuildRequires: ninja
+ 
++%if %{undefined _toolchain}
++%ifarch x86_64
++BuildRequires: clang, llvm, libllvm
++%{!?_toolchain: %define _toolchain clang}
++%endif
++%endif
++
+ 
+ Requires: libllvm = %{version}-%{release}
+ 
+@@ -185,6 +192,28 @@ cp %{SOURCE1001} .
+ export QEMU_RESERVED_VA=0x100000000
+ %endif
+ 
++%ifarch x86_64
++# Strip pre-existing optimization flags and remove performance-harming flags, then force -O3 + ThinLTO
++OPTFLAGS_CFLAGS=$(echo "$CFLAGS" | sed \
++    -e 's/\-O[0-9sz]//g' \
++    -e 's/\-Ofast//g' \
++    -e 's/\-fstack-protector-strong//g' \
++    -e 's/\-fstack-protector-all//g' \
++    -e 's/\-fstack-protector//g' \
++    -e 's/\-fno-omit-frame-pointer//g' \
++    -e 's/\-momit-leaf-frame-pointer//g')
++OPTFLAGS_CXXFLAGS=$(echo "$CXXFLAGS" | sed \
++    -e 's/\-O[0-9sz]//g' \
++    -e 's/\-Ofast//g' \
++    -e 's/\-fstack-protector-strong//g' \
++    -e 's/\-fstack-protector-all//g' \
++    -e 's/\-fstack-protector//g' \
++    -e 's/\-fno-omit-frame-pointer//g' \
++    -e 's/\-momit-leaf-frame-pointer//g')
++export CFLAGS="$OPTFLAGS_CFLAGS -O3 -flto=thin -fomit-frame-pointer -Wno-unused-command-line-argument"
++export CXXFLAGS="$OPTFLAGS_CXXFLAGS -O3 -flto=thin -fomit-frame-pointer -Wno-unused-command-line-argument"
++%endif
++
+ # Set up MLGO AOT model paths from bundled verify assets
+ %if %{with mlgo}
+ MLGO_AOT_DIR="$PWD/mlgo_verify_assets"
+@@ -198,8 +227,13 @@ cd build
+ cmake \
+     -G Ninja \
+     -DTIZEN=1 \
++%ifarch x86_64
++    -DCMAKE_C_COMPILER=clang \
++    -DCMAKE_CXX_COMPILER=clang++ \
++%else
+     -DCMAKE_C_COMPILER=%__cc \
+     -DCMAKE_CXX_COMPILER=%__cxx \
++%endif
+     -DLLVM_HOST_TRIPLE=%{_host} \
+     -DLLVM_DEFAULT_TARGET_TRIPLE=%{_host} \
+     -DLLVM_TARGET_TRIPLE_ENV=%{_host} \
+@@ -207,9 +241,12 @@ cmake \
+     -DCMAKE_C_FLAGS="$CFLAGS" \
+     -DCMAKE_CXX_FLAGS="$CXXFLAGS" \
+ %if %{defined _toolchain}
+-    -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld -ffunction-sections -fdata-sections -Wl,--gc-sections" \
+-    -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld -ffunction-sections -fdata-sections -Wl,--gc-sections" \
++    -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld -flto=thin -ffunction-sections -fdata-sections -Wl,--gc-sections" \
++    -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld -flto=thin -ffunction-sections -fdata-sections -Wl,--gc-sections" \
+     -DLLVM_USE_LINKER=lld \
++    -DLLVM_ENABLE_LTO=Thin \
++    -DCMAKE_RANLIB=%{_bindir}/llvm-ranlib \
++    -DCMAKE_AR=%{_bindir}/llvm-ar \
+ %endif
+     -DLLVM_ENABLE_ASSERTIONS=No \
+     -DLLVM_ENABLE_RTTI=ON \
+@@ -234,9 +271,14 @@ cmake \
+     -DCLANG_ENABLE_ARCMT=OFF \
+     -DLLVM_BUILD_LLVM_DYLIB=ON \
+     -DCLANG_BUILD_CLANG_DYLIB=ON \
++%ifarch x86_64
++    -DLLVM_LINK_LLVM_DYLIB=OFF \
++    -DCLANG_LINK_CLANG_DYLIB=OFF \
++%else
+ %if %{defined _toolchain}
+     -DLLVM_LINK_LLVM_DYLIB=ON \
+     -DCLANG_LINK_CLANG_DYLIB=ON \
++%endif
+ %endif
+     -DLLVM_ENABLE_PROJECTS="clang;lldb;clang-tools-extra;lld;compiler-rt;openmp" \
+     -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=OFF \
+-- 
+2.43.0
+

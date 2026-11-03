@@ -1,0 +1,62 @@
+# tizen_base 模型路径和大文件清单（本地快照）
+# 匹配：find llvm-tizen \( -path "*/models/*" -o -name "*.pb" -o -name "saved_model*" -o -size +20M \)
+# find 的 +20M 按 1 MiB 单位判断；下列 bytes 为精确字节数。
+# f=普通文件，d=目录，l=符号链接；目录 bytes 是目录项大小，不是递归总大小。
+# .git/objects 是 Git 对象存储，测试数据和非 MLGO models 目录也会匹配；不能据此认定为 MLGO 模型。
+# 此清单所列模型和 >20 MiB 文件不推送；源码目录和 Git 对象库也不推送。
+type	bytes	MiB	path
+f	229379240	218.753090	llvm-tizen/.git/objects/pack/pack-3f22f52235e0fe707bb2a52b7b19492585f4ae3c.idx
+f	4591348957	4378.651578	llvm-tizen/.git/objects/pack/pack-3f22f52235e0fe707bb2a52b7b19492585f4ae3c.pack
+f	30605100	29.187298	llvm-tizen/.git/objects/pack/pack-3f22f52235e0fe707bb2a52b7b19492585f4ae3c.rev
+f	860533824	820.669006	llvm-tizen/.git/objects/pack/pack-f4a84f68869c71fe49ad7586aa124f1bb70d7876.pack
+f	25784677	24.590184	llvm-tizen/clang-tools-extra/clangd/quality/model/forest.json
+f	3894	0.003714	llvm-tizen/llvm/lib/Analysis/models/gen-inline-oz-test-model.py
+f	2032	0.001938	llvm-tizen/llvm/lib/Analysis/models/gen-regalloc-eviction-test-model.py
+f	3056	0.002914	llvm-tizen/llvm/lib/Analysis/models/gen-regalloc-priority-test-model.py
+f	3700	0.003529	llvm-tizen/llvm/lib/Analysis/models/interactive_host.py
+f	4058	0.003870	llvm-tizen/llvm/lib/Analysis/models/log_reader.py
+f	1054	0.001005	llvm-tizen/llvm/lib/Analysis/models/saved-model-to-tflite.py
+f	62329	0.059442	llvm-tizen/llvm/lib/Analysis/models/seedEmbeddingVocab75D.json
+f	1489565	1.420560	llvm-tizen/llvm/lib/Analysis/models/x86SeedEmbeddingVocab100D.json
+f	247132	0.235683	llvm-tizen/llvm/unittests/Analysis/Inputs/ir2native_x86_64_model/saved_model.pbtxt
+f	30461764	29.050602	llvm-tizen/packaging/mlgo_aarch_model.tar.gz
+f	28477748	27.158497	llvm-tizen/packaging/mlgo_arm_model.tar.gz
+f	28652731	27.325374	llvm-tizen/packaging/mlgo_x86_model.tar.gz
+
+# MLGO 压缩包内部的模型、XLA runtime 对象和大文件（只读查看，archive!member 表示包内路径）
+# archive SHA256 76f896dfdce3fa19d0ed467554ed3a643f062f52b4a4db81f576d04c469014a1  llvm-tizen/packaging/mlgo_aarch_model.tar.gz
+# members=12782, unpacked_file_bytes=239884520
+f	76664	0.073112	llvm-tizen/packaging/mlgo_aarch_model.tar.gz!./InlinerSizeModel.h
+f	374272	0.356934	llvm-tizen/packaging/mlgo_aarch_model.tar.gz!./InlinerSizeModel.o
+f	48645	0.046391	llvm-tizen/packaging/mlgo_aarch_model.tar.gz!./RegAllocEvictModel.h
+f	75984	0.072464	llvm-tizen/packaging/mlgo_aarch_model.tar.gz!./RegAllocEvictModel.o
+f	39844528	37.998703	llvm-tizen/packaging/mlgo_aarch_model.tar.gz!./mlgo_sysroot/xla_aot_runtime_src/libtf_xla_runtime_prebuilt.a
+f	4768	0.004547	llvm-tizen/packaging/mlgo_aarch_model.tar.gz!./xla_runtime_objects/cpu_function_runtime.cc.o
+f	3632	0.003464	llvm-tizen/packaging/mlgo_aarch_model.tar.gz!./xla_runtime_objects/custom_call_status.cc.o
+f	8024	0.007652	llvm-tizen/packaging/mlgo_aarch_model.tar.gz!./xla_runtime_objects/executable_run_options.cc.o
+f	188568	0.179832	llvm-tizen/packaging/mlgo_aarch_model.tar.gz!./xla_runtime_objects/runtime_single_threaded_matmul_f32.cc.o
+f	14520	0.013847	llvm-tizen/packaging/mlgo_aarch_model.tar.gz!./xla_runtime_objects/xla_compiled_cpu_function.cc.o
+# archive SHA256 dd468cce897c7f578b38668e9d869c6785f3fdbcf97879fd7775b430bd0a3a9a  llvm-tizen/packaging/mlgo_arm_model.tar.gz
+# members=12782, unpacked_file_bytes=220301213
+f	1556	0.001484	llvm-tizen/packaging/mlgo_arm_model.tar.gz!./xla_runtime_objects/cpu_function_runtime.cc.o
+f	9140	0.008717	llvm-tizen/packaging/mlgo_arm_model.tar.gz!./xla_runtime_objects/xla_compiled_cpu_function.cc.o
+f	167076	0.159336	llvm-tizen/packaging/mlgo_arm_model.tar.gz!./xla_runtime_objects/runtime_single_threaded_matmul_f32.cc.o
+f	2828	0.002697	llvm-tizen/packaging/mlgo_arm_model.tar.gz!./xla_runtime_objects/custom_call_status.cc.o
+f	5592	0.005333	llvm-tizen/packaging/mlgo_arm_model.tar.gz!./xla_runtime_objects/executable_run_options.cc.o
+f	379060	0.361500	llvm-tizen/packaging/mlgo_arm_model.tar.gz!./InlinerSizeModel.o
+f	48825	0.046563	llvm-tizen/packaging/mlgo_arm_model.tar.gz!./RegAllocEvictModel.h
+f	20282784	19.343170	llvm-tizen/packaging/mlgo_arm_model.tar.gz!./mlgo_sysroot/xla_aot_runtime_src/libtf_xla_runtime_prebuilt.a
+f	76664	0.073112	llvm-tizen/packaging/mlgo_arm_model.tar.gz!./InlinerSizeModel.h
+f	82352	0.078537	llvm-tizen/packaging/mlgo_arm_model.tar.gz!./RegAllocEvictModel.o
+# archive SHA256 6c221a08aa63f80c3d82713ba968125797f16351c258a174fc0eec6fdffdbf43  llvm-tizen/packaging/mlgo_x86_model.tar.gz
+# members=12782, unpacked_file_bytes=222634336
+f	2792	0.002663	llvm-tizen/packaging/mlgo_x86_model.tar.gz!./xla_runtime_objects/cpu_function_runtime.cc.o
+f	23312	0.022232	llvm-tizen/packaging/mlgo_x86_model.tar.gz!./xla_runtime_objects/xla_compiled_cpu_function.cc.o
+f	277872	0.264999	llvm-tizen/packaging/mlgo_x86_model.tar.gz!./xla_runtime_objects/runtime_single_threaded_matmul_f32.cc.o
+f	3240	0.003090	llvm-tizen/packaging/mlgo_x86_model.tar.gz!./xla_runtime_objects/custom_call_status.cc.o
+f	13656	0.013023	llvm-tizen/packaging/mlgo_x86_model.tar.gz!./xla_runtime_objects/executable_run_options.cc.o
+f	376928	0.359467	llvm-tizen/packaging/mlgo_x86_model.tar.gz!./InlinerSizeModel.o
+f	48825	0.046563	llvm-tizen/packaging/mlgo_x86_model.tar.gz!./RegAllocEvictModel.h
+f	22484724	21.443104	llvm-tizen/packaging/mlgo_x86_model.tar.gz!./mlgo_sysroot/xla_aot_runtime_src/libtf_xla_runtime_prebuilt.a
+f	76859	0.073298	llvm-tizen/packaging/mlgo_x86_model.tar.gz!./InlinerSizeModel.h
+f	80792	0.077049	llvm-tizen/packaging/mlgo_x86_model.tar.gz!./RegAllocEvictModel.o

@@ -1,0 +1,16 @@
+/*
+!/.gitignore
+!/ANALYSIS.md
+!/apply_22.1.8.md
+!/commits_all.txt
+!/commits_mlgo.txt
+!/models_list.txt
+!/patches_mlgo/
+!/packaging_tizen_base/
+/llvm-tizen/
+/llvm-22/
+/patches_all/
+
+# Model archives remain in the local exact packaging snapshot only.
+/packaging_tizen_base/mlgo_*model.tar.gz
+/patches_mlgo/0001-Add-packaging.patch

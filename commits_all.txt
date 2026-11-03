@@ -1,0 +1,14 @@
+f999bd406c0a Revert clang bootstrap + ThinLTO, fall back to GCC
+67619ec8bbba packaging: fix llvm-static-devel with ThinLTO
+cb67996861d0 remove '-fno-inline-functions' compile options
+7e4dc62d8ac0 optimize llvm performance 1. Use -O3 2. Using thin-lto 3. Static link libllvm
+2d23367d74af packaging: select Clang explicitly for libc++ runtimes
+6771dbc48b7e libcxx: backport EH ABI forced-unwind handling
+8dfebafe1a47 libcxxabi: declare __gnu_unwind_frame in cxa_personality (#189787)
+fd7a4929c0e4 Merge MLGO AOT compilation support and optimization improvements
+9ad40bd946a7 clang: add support for LLVM gold plugin in case of accelerated environment
+9576175b59fa Fix armv7l build when compiler is clang
+43db58633333 packaging: bump-up version to 22.1.8
+f31417256f95 Link libclang_rt.asan.so against libatomic when necessary
+53accdc47cd7 Add support for Tizen toolchain vendor
+3d723549f603 Add packaging
